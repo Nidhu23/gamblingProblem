@@ -1,24 +1,48 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 echo "Welcome To Gambling Simulator"
+
+declare -A dailyAmount
 
 stake=100;
 bet=1;
 maxWin=150;
 maxLose=50;
+maxDays=20;
 
-total=$((stake));
+TOTAL_PER_DAY=$((stake));
+TOTAL_TWENTY_DAYS=0;
+WON_AMOUNT=0;
+LOST_AMOUNT=0;
+FINAL_AMOUNT=0;
 
-while [[ $total -le $maxWin && $total -ge $maxLose ]]
+for (( Day=1; Day<=$maxDays; Day++ ))
 do
-	result=$(($RANDOM%2))
-	if [[ $result -eq 1 ]]
-	then
-		echo "You won 1 dollar"
-		((total++))
-	else
-		echo "You lost 1 dollar"
-		((total--))
-	fi
+	while [[ $TOTAL_PER_DAY -lt $maxWin && $TOTAL_PER_DAY -gt $maxLose ]]
+	do
+		result=$(($RANDOM%2))
+		if [[ $result -eq 1 ]]
+		then
+			((TOTAL_PER_DAY++))
+		else
+			((TOTAL_PER_DAY--))
+		fi
+	done
+	dailyAmount[$Day]=$((TOTAL_PER_DAY))
+	FINAL_AMOUNT=$(($FINAL_AMOUNT+$TOTAL_PER_DAY))
+	TOTAL_PER_DAY=$((stake))
 done
+
+for ((Day=1;Day<=$maxDays;Day++))
+do
+	echo -e "Final Amount On Day" $Day "\t" ${dailyAmount[$Day]} "\n"
+done
+
+if [[ $FINAL_AMOUNT -gt 2000 ]]
+then
+	echo "AT THE END OF 20 DAYS, YOU WON " $(($FINAL_AMOUNT-2000))
+else
+	echo "AT THE END OF 20 DAYS, YOU LOST " $((2000-$FINAL_AMOUNT))
+fi
+
 
