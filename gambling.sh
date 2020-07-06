@@ -13,9 +13,6 @@ maxDays=20;
 totalBetAmt=$((stake*maxDays))
 
 TOTAL_PER_DAY=$((stake));
-TOTAL_TWENTY_DAYS=0;
-WON_AMOUNT=0;
-LOST_AMOUNT=0;
 FINAL_AMOUNT=0;
 
 dailyCalculation(){
