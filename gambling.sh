@@ -6,9 +6,11 @@ declare -A dailyAmount
 
 stake=100;
 bet=1;
-maxWin=150;
-maxLose=50;
+stakePercentage=$(($((stake/100))*50))
+maxWin=$((stake+stakePercentage));
+maxLose=$((stake-stakePercentage));
 maxDays=20;
+totalBetAmt=$((stake*maxDays))
 
 TOTAL_PER_DAY=$((stake));
 TOTAL_TWENTY_DAYS=0;
@@ -47,11 +49,11 @@ printDailyAmt(){
 }
 
 winOrLose(){
-	if [[ $FINAL_AMOUNT -gt 2000 ]]
+	if [[ $FINAL_AMOUNT -gt $totalBetAmt ]]
 	then
-		echo "AT THE END OF 20 DAYS, YOU WON " $(($FINAL_AMOUNT-2000))
+		echo "AT THE END OF 20 DAYS, YOU WON $"$(($FINAL_AMOUNT-$totalBetAmt))
 	else
-		echo "AT THE END OF 20 DAYS, YOU LOST " $((2000-$FINAL_AMOUNT))
+		echo "AT THE END OF 20 DAYS, YOU LOST $"$(($totalBetAmt-$FINAL_AMOUNT))
 	fi
 }
 
