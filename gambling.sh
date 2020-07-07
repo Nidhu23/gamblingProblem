@@ -17,6 +17,9 @@ tempWin=0;
 tempLost=0;
 dayWin=0;
 dayLose=0;
+winTotal=0;
+loseTotal=0;
+month=1;
 
 newStakePercent(){
         stakePercentage=$(($newStake/2))
@@ -51,6 +54,7 @@ totalAmount(){
 wonOrLost(){
     if [[ $newStake -lt $totalPerDay ]]
     then
+		winTotal=$(($winTotal+$totalPerDay))
         result=$(($totalPerDay-$newStake))
         echo "Start: $newStake You won on Day"$1 $result "End: $totalPerDay"
         if [[ $result -gt $tempWin ]]
@@ -59,6 +63,7 @@ wonOrLost(){
             dayWin=$(($1))
         fi
     else
+		loseTotal=$(($loseTotal+$totalPerDay))
         result2=$(($newStake-$totalPerDay))
         echo "Start: $newStake You lost on Day"$1 $result2 "End: $totalPerDay"
         if [[ $result2 -gt $tempLose ]]
@@ -70,5 +75,20 @@ wonOrLost(){
     fi
 }
 
+echo "For month 1: "
 totalAmount
 echo -e "Luckiest Day " $dayWin "\nUnluckiest Day: " $dayLose
+
+while (( $month <=12 ))
+do
+	if [[ winTotal -gt loseTotal ]]
+	then
+		((++month))
+		echo "For $month:"
+		totalAmount
+		echo -e "Luckiest Day " $dayWin "\nUnluckiest Day: " $dayLose
+	else
+		echo "You faced too much loss in month $month"
+		exit
+	fi
+done
