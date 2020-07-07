@@ -2,7 +2,8 @@
 
 echo "Welcome To Gambling Simulator"
 
-declare -A dailyAmount
+declare -a lucky
+declare -a unlucky
 
 INITIAL_STAKE=100;
 BET=1;
@@ -12,11 +13,15 @@ totalPerDay=$((INITIAL_STAKE));
 finalAmt=0;
 newStake=0;
 stakeAmt=0;
+tempWin=0;
+tempLost=0;
+dayWin=0;
+dayLose=0;
 
 newStakePercent(){
-    stakePercentage=$(($newStake/2))
-    maxWin=$((newStake+stakePercentage));
-    maxLose=$((newStake-stakePercentage));
+        stakePercentage=$(($newStake/2))
+        maxWin=$((newStake+stakePercentage));
+        maxLose=$((newStake-stakePercentage));
 }
 
 dailyCalculation(){
@@ -35,28 +40,35 @@ dailyCalculation(){
 totalAmount(){
     for (( day=1; day<=$MAX_DAYS; day++ ))
     do
-    newStake=$(($stakeAmt+$INITIAL_STAKE))
-    newStakePercent
-    dailyCalculation
-    wonOrLost $day
-    dailyAmount[$day]=$(($totalPerDay))
-    stakeAmt=$(($totalPerDay))
-    done
-}
-
-printDailyAmt(){
-    for ((day=1;day<=$MAX_DAYS;day++))
-    do
-        echo -e "Final Amount On Day" $day "\t" ${dailyAmount[$day]} "\n"
+        newStake=$(($stakeAmt+$INITIAL_STAKE))
+        newStakePercent
+        dailyCalculation
+        wonOrLost $day
+  		stakeAmt=$(($totalPerDay))
     done
 }
 
 wonOrLost(){
     if [[ $newStake -lt $totalPerDay ]]
     then
-        echo "Start: $newStake You won on Day"$1 $(($totalPerDay-$newStake)) "End: $totalPerDay"
+        result=$(($totalPerDay-$newStake))
+        echo "Start: $newStake You won on Day"$1 $result "End: $totalPerDay"
+        if [[ $result -gt $tempWin ]]
+        then
+            tempWin=$(($result))
+            dayWin=$(($1))
+        fi
     else
-        echo "Start: $newStake You lost on Day"$1 $(($newStake-$totalPerDay)) "End: $totalPerDay"
+        result2=$(($newStake-$totalPerDay))
+        echo "Start: $newStake You lost on Day"$1 $result2 "End: $totalPerDay"
+        if [[ $result2 -gt $tempLose ]]
+        then
+            tempLose=$(($result2))
+            dayLose=$(($1))
+        fi
+
     fi
 }
+
 totalAmount
+echo -e "Luckiest Day " $dayWin "\nUnluckiest Day: " $dayLose
