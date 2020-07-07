@@ -4,57 +4,56 @@ echo "Welcome To Gambling Simulator"
 
 declare -A dailyAmount
 
-stake=100;
-bet=1;
-stakePercentage=$(($((stake/100))*50))
-maxWin=$((stake+stakePercentage));
-maxLose=$((stake-stakePercentage));
-maxDays=20;
-totalBetAmt=$((stake*maxDays))
+STAKE=100;
+BET=1;
+STAKE_PERCENTAGE=$(($((STAKE/100))*50))
+MAX_WIN=$((STAKE+STAKE_PERCENTAGE));
+MAX_LOSE=$((STAKE-STAKE_PERCENTAGE));
+MAX_DAYS=20;
+TOTAL_BET_AMT=$((STAKE*MAX_DAYS))
 
-TOTAL_PER_DAY=$((stake));
-FINAL_AMOUNT=0;
+totalPerDay=$((STAKE));
+finalAmt=0;
 
 dailyCalculation(){
-	while [[ $TOTAL_PER_DAY -lt $maxWin && $TOTAL_PER_DAY -gt $maxLose ]]
+	while [[ $totalPerDay -lt $MAX_WIN && $totalPerDay -gt $MAX_LOSE ]]
 	do
 		result=$(($RANDOM%2))
 		if [[ $result -eq 1 ]]
 		then
-			((TOTAL_PER_DAY++))
+			((totalPerDay++))
 		else
-			((TOTAL_PER_DAY--))
+			((totalPerDay--))
 		fi
 	done
 }
 
 totalAmount(){
-	for (( Day=1; Day<=$maxDays; Day++ ))
+	for (( day=1; day<=$MAX_DAYS; day++ ))
 	do
 		dailyCalculation
-		dailyAmount[$Day]=$((TOTAL_PER_DAY))
-		FINAL_AMOUNT=$(($FINAL_AMOUNT+$TOTAL_PER_DAY))
-		TOTAL_PER_DAY=$((stake))
+		dailyAmount[$day]=$((totalPerDay))
+		finalAmt=$(($finalAmt+$totalPerDay))
+		totalPerDay=$((STAKE))
 	done
 }
 
 printDailyAmt(){
-	for ((Day=1;Day<=$maxDays;Day++))
+	for ((day=1;day<=$MAX_DAYS;day++))
 	do
-		echo -e "Final Amount On Day" $Day "\t" ${dailyAmount[$Day]} "\n"
+		echo -e "Final Amount On Day" $day "\t" ${dailyAmount[$day]} "\n"
 	done
 }
 
 winOrLose(){
-	if [[ $FINAL_AMOUNT -gt $totalBetAmt ]]
+	if [[ $finalAmt -gt $TOTAL_BET_AMT ]]
 	then
-		echo "AT THE END OF 20 DAYS, YOU WON $"$(($FINAL_AMOUNT-$totalBetAmt))
+		echo "AT THE END OF 20 DAYS, YOU WON $"$(($finalAmt-$TOTAL_BET_AMT))
 	else
-		echo "AT THE END OF 20 DAYS, YOU LOST $"$(($totalBetAmt-$FINAL_AMOUNT))
+		echo "AT THE END OF 20 DAYS, YOU LOST $"$(($TOTAL_BET_AMT-$finalAmt))
 	fi
 }
 
 totalAmount
 printDailyAmt
 winOrLose
-
