@@ -5,7 +5,7 @@ echo "Welcome To Gambling Simulator"
 
 INITIAL_STAKE=100;
 BET=1;
-MAX_DAYS=20;
+MAX_DAYS=10;
 
 totalPerDay=0
 winTemp=0
@@ -82,25 +82,25 @@ print(){
 }
 
 gameContinue(){
-	while [[ $month -le 12 ]]
+	while true
 	do
     		if [[ $month -eq 1 ]]
     		then
         		echo "For month $month"
         		play
 			print
+			((month++))
     		else
-        		if [[ $winTotal -gt $loseTotal ]]
-        		then
+        		while [[ $winTotal -gt $loseTotal ]]
+        		do
             			echo "For month $month"
             			play
 				print
-        		else
-				echo "You faced too much loss in month $(($month-1)), you lost $loseTotal"
-            			exit
-        		fi
+				((month++))
+        		done
+			echo "You faced too much loss in month $(($month-1)), you lost $loseTotal"
+                        exit
     		fi
-    		((month++))
 	done
 }
 
