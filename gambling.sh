@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/bin/bash -x 
 
 echo "Welcome To Gambling Simulator"
 
-
+#constants
 INITIAL_STAKE=100;
 BET=1;
 MAX_DAYS=10;
 
+#variables
 totalPerDay=0
 winTemp=0
 loseTemp=0
@@ -35,7 +36,7 @@ luckyCheck(){
 dailyCalculation(){
 	while [[ $totalPerDay -lt $maxWin && $totalPerDay -gt $maxLose ]]
 	do
-        	if [[ $(($RANDOM%2)) -eq 0 ]]
+        	if [[ $(($RANDOM%2)) -eq 1 ]]
         	then
             		totalPerDay=$(($totalPerDay-$BET))
         	else
@@ -82,26 +83,18 @@ print(){
 }
 
 gameContinue(){
-	while true
-	do
-    		if [[ $month -eq 1 ]]
-    		then
-        		echo "For month $month"
-        		play
-			print
-			((month++))
-    		else
-        		while [[ $winTotal -gt $loseTotal ]]
-        		do
-            			echo "For month $month"
-            			play
-				print
-				((month++))
-        		done
-			echo "You faced too much loss in month $(($month-1)), you lost $loseTotal"
-                        exit
-    		fi
-	done
+        echo "For month $month"
+        play
+	print
+	((month++))
+        while [[ $winTotal -gt $loseTotal ]]
+        do
+        	echo "For month $month"
+            	play
+		print
+		((month++))
+        done
+	echo "You faced too much loss in month $(($month-1)), you lost $loseTotal"
 }
 
 gameContinue
